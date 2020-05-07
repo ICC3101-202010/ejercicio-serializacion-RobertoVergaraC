@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,18 +31,32 @@ namespace ClaseSerialización
                 }
                 else if (option == "b")
                 {
-
-                    IFormatter formatter = new SoapFormatter();
-
-                    stream.Close();
+                    for (int i = 0; i < persons.Count; i++)
+                    {
+                        IFormatter formatter = new SoapFormatter();
+                        Stream stream = new FileStream("Personas.xml", FileMode.Open, FileAccess.Read, FileShare.Read);
+                        Person person = (Person) formatter.Deserialize(stream);
+                        stream.Close();
+                    }
                 }
                 else if (option == "c")
                 {
+                    for (int i = 0; i < persons.Count; i++)
+                    {
+                        IFormatter formatter = new SoapFormatter();
+                        Stream stream = new FileStream("Personas.xml", FileMode.Create, FileAccess.Write, FileShare.None);
+                        formatter.Serialize(stream, persons[i]);
+                        stream.Close();
+                    }
 
                 }
                 else if (option == "d")
                 {
-
+                    Console.WriteLine("\nLa lista de Personas creadas es:");
+                    for (int i = 0; i < persons.Count; i++)
+                    {
+                        Console.WriteLine("Persona"+(i+1)+"=\nNombre="+persons[i].Name+"\nApellido="+persons[i].Surname+"\nEdad="+persons[i].Age);
+                    }
                 }
                 else if (option == "e")
                 {
