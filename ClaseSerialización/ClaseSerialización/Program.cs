@@ -16,7 +16,7 @@ namespace ClaseSerialización
             List<Person> persons = new List<Person>();
             while (true)//cargar, almacenar, lista personas, crear
             {
-                Console.WriteLine("Seleccione la opción que desee: \n(a) Crear Persona\n(b) Cargar\n(c) Almacenar\n(d) Lista Personas creadas\n(e) Salir");
+                Console.WriteLine("\nSeleccione la opción que desee: \n(a) Crear Persona\n(b) Cargar\n(c) Almacenar\n(d) Lista Personas creadas\n(e) Salir");
                 string option = Console.ReadLine();
                 if (option == "a")
                 {
@@ -31,31 +31,35 @@ namespace ClaseSerialización
                 }
                 else if (option == "b")
                 {
-                    for (int i = 0; i < persons.Count; i++)
+
+                    IFormatter formatter = new SoapFormatter();
+                    Stream stream = new FileStream("Personas.xml", FileMode.Open, FileAccess.Read, FileShare.Read);
+                    int line = (int) formatter.Deserialize(stream);
+                    for (int i = 0; i < line; i++)
                     {
-                        IFormatter formatter = new SoapFormatter();
-                        Stream stream = new FileStream("Personas.xml", FileMode.Open, FileAccess.Read, FileShare.Read);
-                        Person person = (Person) formatter.Deserialize(stream);
-                        stream.Close();
+                        Person person = (Person)formatter.Deserialize(stream);
+                        persons.Add(person);
                     }
+                    stream.Close(); 
+         
                 }
                 else if (option == "c")
                 {
+                    IFormatter formatter = new SoapFormatter();
+                    Stream stream = new FileStream("Personas.xml", FileMode.Create, FileAccess.Write, FileShare.None);
+                    formatter.Serialize(stream, persons);
                     for (int i = 0; i < persons.Count; i++)
                     {
-                        IFormatter formatter = new SoapFormatter();
-                        Stream stream = new FileStream("Personas.xml", FileMode.Create, FileAccess.Write, FileShare.None);
                         formatter.Serialize(stream, persons[i]);
-                        stream.Close();
                     }
-
+                                            stream.Close();
                 }
                 else if (option == "d")
                 {
                     Console.WriteLine("\nLa lista de Personas creadas es:");
                     for (int i = 0; i < persons.Count; i++)
                     {
-                        Console.WriteLine("Persona"+(i+1)+"=\nNombre="+persons[i].Name+"\nApellido="+persons[i].Surname+"\nEdad="+persons[i].Age);
+                        Console.WriteLine("\nPersona"+(i+1)+":\nNombre ="+persons[i].Name+"\nApellido ="+persons[i].Surname+"\nEdad ="+persons[i].Age);
                     }
                 }
                 else if (option == "e")
