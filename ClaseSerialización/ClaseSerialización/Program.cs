@@ -47,12 +47,12 @@ namespace ClaseSerialización
                 {
                     IFormatter formatter = new SoapFormatter();
                     Stream stream = new FileStream("Personas.xml", FileMode.Create, FileAccess.Write, FileShare.None);
-                    formatter.Serialize(stream, persons);
+                    formatter.Serialize(stream, persons.Count);
                     for (int i = 0; i < persons.Count; i++)
                     {
                         formatter.Serialize(stream, persons[i]);
                     }
-                                            stream.Close();
+                    stream.Close();
                 }
                 else if (option == "d")
                 {
